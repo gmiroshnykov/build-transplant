@@ -11,15 +11,15 @@ data_patterns = [
     'static/**.txt',
 ]
 
-setup(name='relengapi-skeleton',
+setup(name='relengapi-transplant',
     version='0.1.0',
-    description='Skeleton of a RelengAPI project',
-    author='Skeleton Crew',
-    author_email='skeleton@mozilla.com',
-    url='https://github.com/buildbot/build-relengapi-skeleton',
+    description='A tool to transplant commits from one Mercurial repository into another',
+    author='George Miroshnykov',
+    author_email='gmiroshnykov@mozilla.com',
+    url='https://github.com/laggyluke/transplant',
     entry_points={
         "relengapi_blueprints": [
-            'mapper = relengapi.blueprints.skeleton:bp',
+            'mapper = relengapi.blueprints.transplant:bp',
         ],
     },
     packages=find_packages(),
@@ -29,7 +29,7 @@ setup(name='relengapi-skeleton',
         for dirpath, _, files in os.walk('docs')
     ],
     package_data={  # NOTE: these files must *also* be specified in MANIFEST.in
-        'relengapi.blueprints.skeleton': data_patterns,
+        'relengapi.blueprints.transplant': data_patterns,
     },
     install_requires=[
         'Flask',

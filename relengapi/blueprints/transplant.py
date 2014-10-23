@@ -5,7 +5,7 @@
 from flask import Blueprint
 from relengapi.lib import api
 
-bp = Blueprint('skeleton', __name__)
+bp = Blueprint('transplant', __name__)
 
 
 @bp.route('/')
