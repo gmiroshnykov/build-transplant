@@ -1,0 +1,36 @@
+{
+  "name": "transplant",
+  "version": "0.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/laggyluke/transplant.git"
+  },
+  "scripts": {
+    "bower-install": "bower install",
+    "gulp-build": "gulp build",
+    "postinstall": "npm run bower-install && npm run gulp-build"
+  },
+  "devDependencies": {
+    "bower": "^1.3.9",
+    "browserify": "^5.11.0",
+    "browserify-shim": "^3.7.0",
+    "es6ify": "^1.3.0",
+    "gulp": "^3.8.7",
+    "gulp-util": "^3.0.1",
+    "reactify": "^0.14.0",
+    "underscore": "^1.7.0",
+    "vinyl-source-stream": "^0.1.1",
+    "watchify": "^1.0.2"
+  },
+  "browserify": {
+    "transform": [
+      "reactify",
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "jquery": "global:$",
+    "react": "global:React"
+  }
+}
