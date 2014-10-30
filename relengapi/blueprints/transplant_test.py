@@ -1,13 +1,15 @@
-import os
-import unittest
-import tempfile
-import shutil
-import json
 import fnmatch
+import json
+import os
+import shutil
+import tempfile
+import unittest
+
 from flask import Flask
-from repository import Repository, MercurialException
+from repository import Repository
 
 from transplant import bp
+
 
 class TransplantTestCase(unittest.TestCase):
     def setUp(self):
@@ -183,7 +185,6 @@ class TransplantTestCase(unittest.TestCase):
 
         assert commit_info['message'] == "Goodbye World! a=me"
 
-
     def test_error_conflict(self):
         content = "Goodbye World!\n"
         self._set_test_file_content(self.dst_dir, content)
@@ -206,7 +207,7 @@ class TransplantTestCase(unittest.TestCase):
         assert result.status_code == 409
 
         data = json.loads(result.data)
-        assert data['error'] ==  'Transplant failed'
+        assert data['error'] == 'Transplant failed'
         assert 'details' in data
 
         # check that content is not updated

@@ -1,11 +1,13 @@
 import os
-import subprocess
 import pipes
+import subprocess
 import xml.etree.ElementTree as ET
+
 
 def mkdirp(fullpath):
     if not os.path.exists(fullpath):
         os.makedirs(fullpath)
+
 
 class Repository(object):
     cmd = "hg"
@@ -66,7 +68,7 @@ class Repository(object):
             for r in rev:
                 cmd.extend(['--rev', r])
 
-        cmd.extend([source, destination]);
+        cmd.extend([source, destination])
 
         cls.command(cmd)
         return Repository(destination)
@@ -134,13 +136,13 @@ class Repository(object):
                 node=node,
                 date=date,
                 author=author,
-                author_email = author_email,
-                message = message
+                author_email=author_email,
+                message=message
             )
             results.append(result)
         return results
 
-    def raw_log(self, rev = None, style = None, **kwargs):
+    def raw_log(self, rev=None, style=None, **kwargs):
         cmd = ['log']
 
         if rev:
@@ -204,7 +206,6 @@ class Repository(object):
 
         return self.local_command(cmd, extensions=['purge'])
 
-
     def strip(self, rev, no_backup=False):
         cmd = ['strip', '--rev', rev]
 
@@ -246,9 +247,10 @@ class MercurialException(Exception):
     def __str__(self):
         command = ' '.join([pipes.quote(arg) for arg in self.cmd])
         return ("command: {}\n" +
-            "returncode: {}\n" +
-            "stdout: {}\n" +
-            "stderr: {}\n").format(command, self.returncode, self.stdout, self.stderr)
+                "returncode: {}\n" +
+                "stdout: {}\n" +
+                "stderr: {}\n").format(command, self.returncode, self.stdout, self.stderr)
+
 
 class UnknownRevisionException(Exception):
     def __init__(self, rev, cause=None):

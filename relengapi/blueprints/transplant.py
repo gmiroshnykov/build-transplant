@@ -2,16 +2,18 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import os
-import time
-import fnmatch
 import logging
-import json
-from flask import Blueprint, Response, request, redirect, jsonify, render_template, make_response, current_app
-from repository import Repository, MercurialException, UnknownRevisionException
+import os
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+from flask import Blueprint
+from flask import current_app
+from flask import jsonify
+from flask import make_response
+from flask import render_template
+from flask import request
+from repository import MercurialException
+from repository import Repository
+from repository import UnknownRevisionException
 
 DEFAULT_REPOSITORIES = [
     {
@@ -32,15 +34,21 @@ TRANSPLANT_FILTER = os.path.join(PROJECT_DIR, 'transplant_filter.py')
 PULL_INTERVAL = 60
 MAX_COMMITS = 100
 
-Repository.register_extension('collapse', os.path.join(PROJECT_DIR, 'vendor', 'hgext', 'collapse.py'))
+Repository.register_extension(
+    'collapse',
+    os.path.join(PROJECT_DIR, 'vendor', 'hgext', 'collapse.py')
+)
 
+logger = logging.getLogger(__name__)
 bp = Blueprint('transplant', __name__,
-    template_folder='templates',
-    static_folder='static')
+               template_folder='templates',
+               static_folder='static')
+
 
 @bp.route('/')
 def flask_index():
     return render_template('index.html.j2')
+
 
 @bp.route('/config.js')
 def flask_config_js():
@@ -49,6 +57,7 @@ def flask_config_js():
     response = make_response(config_js)
     response.headers["Content-Type"] = "application/javascript"
     return response
+
 
 @bp.route('/repositories/<repository_id>/lookup')
 def flask_lookup(repository_id):
@@ -71,7 +80,8 @@ def flask_lookup(repository_id):
         'revset': revset_info
     })
 
-@bp.route('/transplant', methods = ['POST'])
+
+@bp.route('/transplant', methods=['POST'])
 def flask_transplant():
     params = request.get_json()
     if not params:
@@ -105,9 +115,9 @@ def flask_transplant():
     return transplant(src, dst, items)
 
 
-
 def is_allowed_transplant(src, dst):
     return src != dst
+
 
 def find_repo(name):
     repositories = current_app.config.get('TRANSPLANT_REPOSITORIES', DEFAULT_REPOSITORIES)
@@ -117,6 +127,7 @@ def find_repo(name):
 
     return None
 
+
 def has_repo(name):
     repository = find_repo(name)
     if repository is None:
@@ -124,12 +135,14 @@ def has_repo(name):
 
     return True
 
+
 def get_repo_url(name):
     repository = find_repo(name)
     if repository is None:
         return None
 
     return repository['path']
+
 
 def get_repo_base_url(name):
     repository = find_repo(name)
@@ -149,6 +162,7 @@ def get_repo_dir(name):
         os.makedirs(workdir)
 
     return os.path.abspath(os.path.join(workdir, name))
+
 
 def clone(name):
     repo_url = get_repo_url(name)
@@ -171,6 +185,7 @@ def clone(name):
 
     return repository
 
+
 def get_revset_info(repository_id, revset):
     repository = clone(repository_id)
     commits = optimistic_log(repository, revset)
@@ -183,15 +198,18 @@ def get_revset_info(repository_id, revset):
         "commits": commits
     }
 
+
 def optimistic_log(repository, revset):
     try:
         commits = repository.log(rev=revset)
     except UnknownRevisionException:
-        logger.info('revset "%s" not found in local repository, pulling "%s"', revset, repository.path)
+        logger.info('revset "%s" not found in local repository, pulling "%s"',
+                    revset, repository.path)
         repository.pull(rev=revset, update=True)
         commits = repository.log(rev=revset)
 
     return commits
+
 
 def cleanup(repo):
     logger.info('cleaning up')
@@ -204,6 +222,7 @@ def cleanup(repo):
         if 'empty revision set' not in e.stderr:
             raise e
 
+
 def raw_transplant(repository, source, revset, message=None):
     filter = None
     env = os.environ.copy()
@@ -213,6 +232,7 @@ def raw_transplant(repository, source, revset, message=None):
         env['TRANSPLANT_MESSAGE'] = message
 
     return repository.transplant(revset, source=source, filter=filter, env=env)
+
 
 def transplant(src, dst, items):
     try:
@@ -245,6 +265,7 @@ def transplant(src, dst, items):
             }
         }), 409
 
+
 def transplant_item(src, dst, item):
     if 'commit' in item:
         transplant_commit(src, dst, item)
@@ -253,9 +274,11 @@ def transplant_item(src, dst, item):
     else:
         raise Exception("unknown item: {}".format(item))
 
+
 def transplant_commit(src, dst, item):
     message = item.get('message', None)
     _transplant(src, dst, item['commit'], message=message)
+
 
 def transplant_revset(src, dst, item):
     message = item.get('message', None)
@@ -272,23 +295,23 @@ def transplant_revset(src, dst, item):
         return
 
     if commits_count == 1:
-      _transplant(src, dst, item['revset'], message=message)
+        _transplant(src, dst, item['revset'], message=message)
     else:
-      old_tip = dst_repo.id(id=True)
-      revset = [commit['node'] for commit in commits]
+        old_tip = dst_repo.id(id=True)
+        revset = [commit['node'] for commit in commits]
 
-      # no need to pass message as we'll override it during collapse anyway
-      _transplant(src, dst, revset)
+        # no need to pass message as we'll override it during collapse anyway
+        _transplant(src, dst, revset)
 
-      collapse_rev = 'descendants(children({}))'.format(old_tip)
-      collapse_commits = dst_repo.log(rev=collapse_rev)
+        collapse_rev = 'descendants(children({}))'.format(old_tip)
+        collapse_commits = dst_repo.log(rev=collapse_rev)
 
-      # less than two commits were transplanted, no need to squash
-      if len(collapse_commits) < 2:
-        return
+        # less than two commits were transplanted, no need to squash
+        if len(collapse_commits) < 2:
+            return
 
-      logger.info('collapsing "%s"', collapse_rev)
-      dst_repo.collapse(rev=collapse_rev, message=message)
+        logger.info('collapsing "%s"', collapse_rev)
+        dst_repo.collapse(rev=collapse_rev, message=message)
 
 
 def _transplant(src, dst, revset, message=None):
@@ -304,9 +327,10 @@ def _transplant(src, dst, revset, message=None):
 
     logger.debug('hg transplant: %s', result)
 
-def too_many_commits_error(current, limit):
-    return "You're trying to transplant {} commits which is above {} commits limit".format(current, limit)
 
+def too_many_commits_error(current, limit):
+    return ("You're trying to transplant {} commits "
+            "which is above {} commits limit").format(current, limit)
 
 
 class TooManyCommitsError(Exception):
