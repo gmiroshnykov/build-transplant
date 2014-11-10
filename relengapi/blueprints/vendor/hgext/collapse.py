@@ -101,14 +101,14 @@ def collapse(ui, repo, **opts):
                 last = max(revs)
 
                 assert len(revs) > 1
-                do_collapse(ui, repo, first, last, revs, movelog, 
+                do_collapse(ui, repo, first, last, revs, movelog,
                             timedelta, opts)
                 count += 1
     finally:
         os.chdir(olddir)
-        
 
-def do_collapse(ui, repo, first, last, revs, movelog, timedelta, opts):        
+
+def do_collapse(ui, repo, first, last, revs, movelog, timedelta, opts):
     ui.debug(_('Collapsing revisions %s\n') % revs)
 
     if opts['debugdelay']:
@@ -168,7 +168,7 @@ def do_collapse(ui, repo, first, last, revs, movelog, timedelta, opts):
             collapsed = makecollapsed(ui, repo, parent, revs, branch, tagsmap,
                                       parent_hgtags, movelog, opts)
             movemap[max(revs)] = collapsed
-            movedescendants(ui, repo, collapsed, tomove, movemap, tagsmap, 
+            movedescendants(ui, repo, collapsed, tomove, movemap, tagsmap,
                             parent_hgtags, movelog, debug_delay)
             fix_hgtags(ui, repo, head_hgtags, tagsmap)
         except:
@@ -183,7 +183,7 @@ def do_collapse(ui, repo, first, last, revs, movelog, timedelta, opts):
 
         ui.status(_('collapse completed\n'))
 
-def makecollapsed(ui, repo, parent, revs, branch, tagsmap, parent_hgtags, 
+def makecollapsed(ui, repo, parent, revs, branch, tagsmap, parent_hgtags,
                   movelog, opts):
     'Creates the collapsed revision on top of parent'
 
@@ -235,14 +235,14 @@ def makecollapsed(ui, repo, parent, revs, branch, tagsmap, parent_hgtags,
 
     newhex = hex(ctx.node())
     for n in nodelist:
-        ui.debug(_('makecollapsed %s -> %s\n' % (n, newhex))) 
+        ui.debug(_('makecollapsed %s -> %s\n' % (n, newhex)))
         tagsmap[n] = newhex
         if movelog:
             movelog.write('coll %s -> %s\n' % (n, newhex))
-        
+
     return ctx
 
-def movedescendants(ui, repo, collapsed, tomove, movemap, tagsmap, 
+def movedescendants(ui, repo, collapsed, tomove, movemap, tagsmap,
                     parent_hgtags, movelog, debug_delay):
     'Moves the descendants of the source revisions to the collapsed revision'
 
@@ -265,33 +265,33 @@ def movedescendants(ui, repo, collapsed, tomove, movemap, tagsmap,
             tagsmap[nodehex] = tagsmap[phex]
         else:
             if len(parents) == 1:
-                ui.debug(_('setting parent to %d\n') 
+                ui.debug(_('setting parent to %d\n')
                          % movemap[parents[0]].rev())
                 repo.dirstate.setparents(movemap[parents[0]].node())
             else:
                 ui.debug(_('setting parents to %d and %d\n') %
-                    (map_or_rev(repo, movemap, parents[0]).rev(), 
+                    (map_or_rev(repo, movemap, parents[0]).rev(),
                      map_or_rev(repo, movemap, parents[1]).rev()))
-                repo.dirstate.setparents(map_or_rev(repo, movemap, 
+                repo.dirstate.setparents(map_or_rev(repo, movemap,
                                                     parents[0]).node(),
-                                         map_or_rev(repo, movemap, 
+                                         map_or_rev(repo, movemap,
                                                     parents[1]).node())
 
             repo.dirstate.write()
-            
+
             ui.debug(_('reverting to revision %d\n') % r)
             recreaterev(ui, repo, r)
 
             write_hgtags(parent_hgtags)
-            newrev = repo.commit(text=repo[r].description(), 
+            newrev = repo.commit(text=repo[r].description(),
                                  user=repo[r].user(), date=repo[r].date(),
                                  force=True)
 
             if newrev == None:
                 raise util.Abort(_('no commit done: text=%r, user=%r, date=%r')
-                                 % (repo[r].description(), repo[r].user(), 
+                                 % (repo[r].description(), repo[r].user(),
                                     repo[r].date()))
-                
+
             ctx = repo[newrev]
             movemap[r] = ctx
 
@@ -349,7 +349,7 @@ def fix_hgtags(ui, repo, head_hgtags, tagsmap):
             nhm = map_recursive(tagsmap, nodehex)
             ui.debug('fix_hgtags: hgtags write: %s %s\n' % (nhm, name))
             tfile.write('%s %s\n' % (nhm, name))
-        lines.close()    
+        lines.close()
         tfile.close()
         wctx = repo[None]
         if '.hgtags' not in wctx:
@@ -357,9 +357,9 @@ def fix_hgtags(ui, repo, head_hgtags, tagsmap):
         nrev = repo.commit(text="collapse tag fix")
         if nrev:
             nctx = repo[nrev]
-            ui.debug(_('fix_hgtags: nctx rev %d node %r files %r\n') % 
+            ui.debug(_('fix_hgtags: nctx rev %d node %r files %r\n') %
                      (nctx.rev(), hex(nctx.node()), nctx.files()))
-            ui.debug(_('fix_hgtags: nctx parents %r\n') % 
+            ui.debug(_('fix_hgtags: nctx parents %r\n') %
                       ([hex(p.node()) for p in nctx.parents()]))
         else:
             ui.debug(_('fix_hgtags: nctx: None\n'))
@@ -401,7 +401,7 @@ def get_hgtags_from_heads(ui, repo, rev):
         if '.hgtags' in repo[h]:
             hgtags = repo[h]['.hgtags'].data()
             hnode = hex(repo[h].node())
-            ui.debug(_('get_hgtags_from_heads: head_hgtags[%s]:\n%s\n') 
+            ui.debug(_('get_hgtags_from_heads: head_hgtags[%s]:\n%s\n')
                      % (hnode, hgtags))
             head_hgtags[hnode] = hgtags
     return head_hgtags
@@ -428,7 +428,7 @@ def find_chunk(ui, repo, start, acc, timedelta, opts):
     children = [c.rev() for c in repo[start].children()]
     parents = [p.rev() for p in repo[start].parents()]
 
-    ui.debug(_('find_chunk(%d, %s) children %s parents %s\n') 
+    ui.debug(_('find_chunk(%d, %s) children %s parents %s\n')
              % (start, acc, children, parents))
 
     if len(parents) == 1 and not auto_exclude(ui, repo, start):
@@ -467,30 +467,30 @@ def stop_here(ui, repo, parent, current, acc, timedelta, opts):
 
     td = repo[current].date()[0] - repo[parent].date()[0]
     if td > timedelta:
-        ui.debug(_('timedelta parent %s current %s is %s (max %s) -> stop\n') 
+        ui.debug(_('timedelta parent %s current %s is %s (max %s) -> stop\n')
                  % (parent, current, td, timedelta))
         return True
 
     if opts['userchange']:
         if repo[current].user() != repo[parent].user():
             ui.debug(_('userchange parent %s user %s current %s user %s, '
-                       '-> stop\n') 
-                     % (parent, repo[parent].user(), 
+                       '-> stop\n')
+                     % (parent, repo[parent].user(),
                         current, repo[current].user()))
             return True
 
     if opts['singlefile']:
-        fs = set([item for sublist in 
+        fs = set([item for sublist in
                   [repo[r].files() for r in acc] for item in sublist])
         cs = set(repo[current].files())
         if not fs.isdisjoint(cs):
-            ui.debug(_('singlefile current %s fs %s cs %s -> stop\n') 
+            ui.debug(_('singlefile current %s fs %s cs %s -> stop\n')
                      % (current, fs, cs))
             return True
 
     if not opts['tagcollapse']:
         if repo[parent].tags():
-            ui.debug(_('parent %s has tags %s -> stop\n') 
+            ui.debug(_('parent %s has tags %s -> stop\n')
                      % (parent, repo[parent].tags()))
             return True
 

@@ -1,5 +1,5 @@
+/.vagrant/
 /node_modules/
-build/
 dist/
 *.swp
 *.pyc

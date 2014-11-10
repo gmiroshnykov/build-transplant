@@ -1,2 +1,2 @@
-web: relengapi serve -p 8010
+web: relengapi serve -a -p 8010
 gulp: gulp watch

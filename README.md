@@ -89,17 +89,29 @@ Requirements
 * RelengAPI 1.0.0+
 * Mercurial 3.1.1+
 * Properly configured SSH access to source and destination repositories
-* [Foreman](http://ddollar.github.io/foreman/) (development only)
-* Node.js 0.10 + npm (development only)
+* Vagrant (development only)
 
 
 Development
 -----------
 
-1. Run `pip install -e '.[test]'`
-2. Run `npm install`
-3. Run `foreman start`
-4. Open [http://127.0.0.1:8010/transplant/](http://127.0.0.1:8010/transplant/).
+1. Add the following lines to `/etc/hosts`:
+
+    ```
+    # transplant
+    10.0.32.2      transplant.dev
+    ```
+
+2. Run the following commands:
+
+    ```
+    vagrant up
+    vagrant ssh
+    cd /vagrant
+    npm start
+    ```
+
+3. Open [http://transplant.dev:8010/transplant/](http://transplant.dev:8010/transplant/).
 
 
 REST API

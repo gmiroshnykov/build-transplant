@@ -28,6 +28,8 @@ DEFAULT_REPOSITORIES = [
 ]
 
 DEFAULT_WORKDIR = '/tmp/transplant'
+DEFAULT_USERNAME = 'Transplant'
+DEFAULT_EMAIL = 'transplant@example.com'
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 TRANSPLANT_FILTER = os.path.join(PROJECT_DIR, 'transplant_filter.py')
@@ -235,6 +237,10 @@ def raw_transplant(repository, source, revset, message=None):
 
 
 def transplant(src, dst, items):
+    # configure username / email for mercurial commits
+    Repository.username = current_app.config.get('TRANSPLANT_USERNAME', DEFAULT_USERNAME)
+    Repository.email = current_app.config.get('TRANSPLANT_EMAIL', DEFAULT_EMAIL)
+
     try:
         dst_repo = clone(dst)
 

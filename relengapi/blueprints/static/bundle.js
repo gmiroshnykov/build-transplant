@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/api.js":[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/vagrant/client/js/api.js":[function(require,module,exports){
 (function (global){
 "use strict";
 var $ = (typeof window !== "undefined" ? window.$ : typeof global !== "undefined" ? global.$ : null);
@@ -38,7 +38,7 @@ exports.transplant = function(source, target, items, callback) {
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/app.js":[function(require,module,exports){
+},{}],"/vagrant/client/js/app.js":[function(require,module,exports){
 (function (global){
 "use strict";
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
@@ -49,7 +49,7 @@ React.renderComponent(TransplantApp({repositories: REPOSITORIES}), document.getE
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./components/TransplantApp.jsx":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/TransplantApp.jsx"}],"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/Alert.jsx":[function(require,module,exports){
+},{"./components/TransplantApp.jsx":"/vagrant/client/js/components/TransplantApp.jsx"}],"/vagrant/client/js/components/Alert.jsx":[function(require,module,exports){
 (function (global){
 /** @jsx React.DOM */"use strict";
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
@@ -86,7 +86,7 @@ module.exports = Alert;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/Alerts.jsx":[function(require,module,exports){
+},{}],"/vagrant/client/js/components/Alerts.jsx":[function(require,module,exports){
 (function (global){
 /** @jsx React.DOM */"use strict";
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),
@@ -119,7 +119,7 @@ module.exports = Alerts;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./Alert.jsx":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/Alert.jsx","underscore":"/Users/laggyluke/Projects/mozilla/build-transplant/node_modules/underscore/underscore.js"}],"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/EditableCommit.jsx":[function(require,module,exports){
+},{"./Alert.jsx":"/vagrant/client/js/components/Alert.jsx","underscore":"/vagrant/node_modules/underscore/underscore.js"}],"/vagrant/client/js/components/EditableCommit.jsx":[function(require,module,exports){
 (function (global){
 /** @jsx React.DOM */"use strict";
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
@@ -173,7 +173,7 @@ module.exports = EditableCommit;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/RepositoriesListField.jsx":[function(require,module,exports){
+},{}],"/vagrant/client/js/components/RepositoriesListField.jsx":[function(require,module,exports){
 (function (global){
 /** @jsx React.DOM */"use strict";
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),
@@ -220,7 +220,7 @@ module.exports = RepositoriesListField;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"underscore":"/Users/laggyluke/Projects/mozilla/build-transplant/node_modules/underscore/underscore.js"}],"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/RevsetField.jsx":[function(require,module,exports){
+},{"underscore":"/vagrant/node_modules/underscore/underscore.js"}],"/vagrant/client/js/components/RevsetField.jsx":[function(require,module,exports){
 (function (global){
 /** @jsx React.DOM */"use strict";
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null);
@@ -288,7 +288,7 @@ module.exports = RevsetField;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/TransplantApp.jsx":[function(require,module,exports){
+},{}],"/vagrant/client/js/components/TransplantApp.jsx":[function(require,module,exports){
 (function (global){
 /** @jsx React.DOM */"use strict";
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),
@@ -516,7 +516,7 @@ module.exports = TransplantApp;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../api":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/api.js","./TransplantForm.jsx":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/TransplantForm.jsx","./TransplantRevsets.jsx":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/TransplantRevsets.jsx","underscore":"/Users/laggyluke/Projects/mozilla/build-transplant/node_modules/underscore/underscore.js"}],"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/TransplantForm.jsx":[function(require,module,exports){
+},{"../api":"/vagrant/client/js/api.js","./TransplantForm.jsx":"/vagrant/client/js/components/TransplantForm.jsx","./TransplantRevsets.jsx":"/vagrant/client/js/components/TransplantRevsets.jsx","underscore":"/vagrant/node_modules/underscore/underscore.js"}],"/vagrant/client/js/components/TransplantForm.jsx":[function(require,module,exports){
 (function (global){
 /** @jsx React.DOM */"use strict";
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),
@@ -616,7 +616,7 @@ module.exports = TransplantForm;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"../api":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/api.js","./Alerts.jsx":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/Alerts.jsx","./RepositoriesListField.jsx":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/RepositoriesListField.jsx","./RevsetField.jsx":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/RevsetField.jsx","underscore":"/Users/laggyluke/Projects/mozilla/build-transplant/node_modules/underscore/underscore.js"}],"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/TransplantRevset.jsx":[function(require,module,exports){
+},{"../api":"/vagrant/client/js/api.js","./Alerts.jsx":"/vagrant/client/js/components/Alerts.jsx","./RepositoriesListField.jsx":"/vagrant/client/js/components/RepositoriesListField.jsx","./RevsetField.jsx":"/vagrant/client/js/components/RevsetField.jsx","underscore":"/vagrant/node_modules/underscore/underscore.js"}],"/vagrant/client/js/components/TransplantRevset.jsx":[function(require,module,exports){
 (function (global){
 /** @jsx React.DOM */"use strict";
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),
@@ -703,7 +703,7 @@ module.exports = TransplantRevset;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./EditableCommit.jsx":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/EditableCommit.jsx","underscore":"/Users/laggyluke/Projects/mozilla/build-transplant/node_modules/underscore/underscore.js"}],"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/TransplantRevsets.jsx":[function(require,module,exports){
+},{"./EditableCommit.jsx":"/vagrant/client/js/components/EditableCommit.jsx","underscore":"/vagrant/node_modules/underscore/underscore.js"}],"/vagrant/client/js/components/TransplantRevsets.jsx":[function(require,module,exports){
 (function (global){
 /** @jsx React.DOM */"use strict";
 var React = (typeof window !== "undefined" ? window.React : typeof global !== "undefined" ? global.React : null),
@@ -738,7 +738,7 @@ module.exports = TransplantRevsets;
 
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./TransplantRevset.jsx":"/Users/laggyluke/Projects/mozilla/build-transplant/client/js/components/TransplantRevset.jsx","underscore":"/Users/laggyluke/Projects/mozilla/build-transplant/node_modules/underscore/underscore.js"}],"/Users/laggyluke/Projects/mozilla/build-transplant/node_modules/underscore/underscore.js":[function(require,module,exports){
+},{"./TransplantRevset.jsx":"/vagrant/client/js/components/TransplantRevset.jsx","underscore":"/vagrant/node_modules/underscore/underscore.js"}],"/vagrant/node_modules/underscore/underscore.js":[function(require,module,exports){
 //     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -2155,4 +2155,4 @@ module.exports = TransplantRevsets;
   }
 }.call(this));
 
-},{}]},{},["/Users/laggyluke/Projects/mozilla/build-transplant/client/js/app.js"]);
+},{}]},{},["/vagrant/client/js/app.js"]);

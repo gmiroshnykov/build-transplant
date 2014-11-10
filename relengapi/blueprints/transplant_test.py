@@ -8,8 +8,9 @@ import unittest
 from flask import Flask
 from repository import Repository
 
-from transplant import bp
-
+from transplant import bp, DEFAULT_USERNAME, DEFAULT_EMAIL
+Repository.username = DEFAULT_USERNAME
+Repository.email = DEFAULT_EMAIL
 
 class TransplantTestCase(unittest.TestCase):
     def setUp(self):
