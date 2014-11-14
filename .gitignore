@@ -1,6 +1,5 @@
 /.vagrant/
 /node_modules/
-dist/
 *.swp
 *.pyc
 *.egg-info/
