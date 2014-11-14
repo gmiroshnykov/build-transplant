@@ -4,6 +4,7 @@
 
 import logging
 import os
+import flask_login
 
 from flask import Blueprint
 from flask import current_app
@@ -11,9 +12,11 @@ from flask import jsonify
 from flask import make_response
 from flask import render_template
 from flask import request
+from flask.ext.login import current_user
 from repository import MercurialException
 from repository import Repository
 from repository import UnknownRevisionException
+from relengapi import p
 
 DEFAULT_REPOSITORIES = [
     {
@@ -41,6 +44,8 @@ Repository.register_extension(
     os.path.join(PROJECT_DIR, 'vendor', 'hgext', 'collapse.py')
 )
 
+p.transplant.transplant.doc("Perform a transplant")
+
 logger = logging.getLogger(__name__)
 bp = Blueprint('transplant', __name__,
                template_folder='templates',
@@ -48,6 +53,7 @@ bp = Blueprint('transplant', __name__,
 
 
 @bp.route('/')
+@p.transplant.transplant.require()
 def flask_index():
     return render_template('index.html.j2')
 
@@ -62,6 +68,7 @@ def flask_config_js():
 
 
 @bp.route('/repositories/<repository_id>/lookup')
+@p.transplant.transplant.require()
 def flask_lookup(repository_id):
     revset = request.values.get('revset')
     if not revset:
@@ -84,6 +91,7 @@ def flask_lookup(repository_id):
 
 
 @bp.route('/transplant', methods=['POST'])
+@p.transplant.transplant.require()
 def flask_transplant():
     params = request.get_json()
     if not params:
