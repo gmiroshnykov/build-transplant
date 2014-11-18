@@ -140,7 +140,7 @@ Each item can be:
   ```json
   {
     "revset": "4c6efadbb0e0 + 035d8c4536cc + 4095850df1d8",
-    "message": "(optional) sqhashed commits message"
+    "message": "(optional) squashed commits message"
   }
   ```
 
