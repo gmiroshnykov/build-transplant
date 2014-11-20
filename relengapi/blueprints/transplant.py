@@ -16,7 +16,6 @@ from flask.ext.login import current_user
 from repository import MercurialException
 from repository import Repository
 from repository import UnknownRevisionException
-from relengapi import p
 
 DEFAULT_REPOSITORIES = [
     {
@@ -44,31 +43,11 @@ Repository.register_extension(
     os.path.join(PROJECT_DIR, 'vendor', 'hgext', 'collapse.py')
 )
 
-p.transplant.transplant.doc("Perform a transplant")
-
 logger = logging.getLogger(__name__)
-bp = Blueprint('transplant', __name__,
-               template_folder='templates',
-               static_folder='static')
-
-
-@bp.route('/')
-@p.transplant.transplant.require()
-def flask_index():
-    return render_template('index.html.j2')
-
-
-@bp.route('/config.js')
-def flask_config_js():
-    repositories = current_app.config.get('TRANSPLANT_REPOSITORIES', DEFAULT_REPOSITORIES)
-    config_js = render_template('config.js.j2', repositories=repositories)
-    response = make_response(config_js)
-    response.headers["Content-Type"] = "application/javascript"
-    return response
+bp = Blueprint('transplant', __name__)
 
 
 @bp.route('/repositories/<repository_id>/lookup')
-@p.transplant.transplant.require()
 def flask_lookup(repository_id):
     revset = request.values.get('revset')
     if not revset:
@@ -91,7 +70,6 @@ def flask_lookup(repository_id):
 
 
 @bp.route('/transplant', methods=['POST'])
-@p.transplant.transplant.require()
 def flask_transplant():
     params = request.get_json()
     if not params:
