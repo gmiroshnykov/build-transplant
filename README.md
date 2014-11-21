@@ -108,7 +108,8 @@ Development
     vagrant up
     vagrant ssh
     cd /vagrant
-    npm start
+    . ~/envs/transplant/bin/activate
+    relengapi serve -a -p 8010
     ```
 
 3. Open [http://transplant.dev:8010/transplant/](http://transplant.dev:8010/transplant/).

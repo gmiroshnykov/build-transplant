@@ -1,5 +1,4 @@
 /.vagrant/
-/node_modules/
 *.swp
 *.pyc
 *.egg-info/
