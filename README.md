@@ -108,11 +108,11 @@ Development
     vagrant up
     vagrant ssh
     cd /vagrant
-    . ~/envs/transplant/bin/activate
-    relengapi serve -a -p 8010
+    honcho start
     ```
 
-3. Open [http://transplant.dev:8010/transplant/](http://transplant.dev:8010/transplant/).
+3. Open [http://transplant.dev:8010/transplant/transplant](http://transplant.dev:8010/transplant/transplant).
+4. If you see `405 Method Not Allowed`, then it works.
 
 
 REST API

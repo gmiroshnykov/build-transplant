@@ -3,20 +3,12 @@
 import os
 from setuptools import setup, find_packages
 
-data_patterns = [
-    'templates/**.html',
-    'static/**.jpg',
-    'static/**.css',
-    'static/**.js',
-    'static/**.txt',
-]
-
 setup(name='relengapi-transplant',
     version='0.1.0',
     description='A tool to transplant commits from one Mercurial repository into another',
     author='George Miroshnykov',
     author_email='gmiroshnykov@mozilla.com',
-    url='https://github.com/laggyluke/transplant',
+    url='https://github.com/laggyluke/build-transplant',
     entry_points={
         "relengapi_blueprints": [
             'mapper = relengapi.blueprints.transplant:bp',
@@ -32,9 +24,6 @@ setup(name='relengapi-transplant',
         # see https://bugzilla.mozilla.org/show_bug.cgi?id=1088676
         if files
     ],
-    package_data={  # NOTE: these files must *also* be specified in MANIFEST.in
-        'relengapi.blueprints.transplant': data_patterns,
-    },
     install_requires=[
         'Flask',
         'relengapi>=0.3',
