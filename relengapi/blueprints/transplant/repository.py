@@ -15,8 +15,6 @@ def mkdirp(fullpath):
 
 class Repository(object):
     cmd = "hg"
-    username = None
-    email = None
     registered_extensions = {}
 
     def __init__(self, path):
@@ -39,17 +37,6 @@ class Repository(object):
         extensions_config = cls._get_extensions_config(extensions)
         cmd.extend(extensions_config)
         cmd.extend(args)
-
-        if 'env' not in kwargs:
-            kwargs['env'] = os.environ.copy()
-
-        env = kwargs['env']
-
-        if cls.username is not None:
-            env['HGUSER'] = cls.username
-
-        if cls.email is not None:
-            env['EMAIL'] = cls.email
 
         returncode, stdout, stderr = cls.unsafe_command(cmd, **kwargs)
         if returncode != 0:
@@ -196,11 +183,14 @@ class Repository(object):
 
         return self.local_command(cmd, extensions=['transplant'], **kwargs)
 
-    def commit(self, message, addremove=False):
+    def commit(self, message, addremove=False, user=None):
         cmd = ['commit', '--message', message]
 
         if addremove:
             cmd.append('--addremove')
+
+        if user:
+            cmd.extend(['--user', user])
 
         return self.local_command(cmd)
 

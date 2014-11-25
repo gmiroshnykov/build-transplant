@@ -31,6 +31,10 @@ def flask_lookup(repository_id):
         return jsonify({
             'error': e.message
         }), 400
+    except actions.TransplantError, e:
+        return jsonify({
+            'error': e.message
+        }), 400
     except MercurialException, e:
         return jsonify({
             'error': e.stderr
@@ -72,7 +76,7 @@ def flask_transplant():
         msg = 'Transplant from {} to {} is not allowed'.format(src, dst)
         return jsonify({'error': msg}), 400
 
-    task = tasks.transplant.delay(src, dst, items)
+    task = tasks.transplant.apply_async((src, dst, items), queue='transplant')
     return jsonify({
         'task': task.id
     })

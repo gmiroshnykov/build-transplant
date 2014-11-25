@@ -9,10 +9,6 @@ from relengapi.lib import celery
 import actions
 from repository import MercurialException
 
-@celery.task
-def add(x, y):
-    return x + y
-
 @celery.task()
 def transplant(src, dst, items):
     try:

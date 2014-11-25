@@ -63,7 +63,7 @@ def has_repo(name):
 def get_repo_url(name):
     repository = find_repo(name)
     if repository is None:
-        return None
+        raise TransplantError('unknown repository: {}'.format(name))
 
     return repository['path']
 
@@ -71,7 +71,7 @@ def get_repo_url(name):
 def get_repo_base_url(name):
     repository = find_repo(name)
     if repository is None:
-        return None
+        raise TransplantError('unknown repository: {}'.format(name))
 
     if 'base' in repository:
         return repository['base']
