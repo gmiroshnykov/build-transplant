@@ -1,4 +1,0 @@
-Transplant
-==========
-
-.. api:autoendpoint:: transplant.*

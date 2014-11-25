@@ -11,6 +11,8 @@ from repository import Repository
 from repository import MercurialException
 from repository import UnknownRevisionException
 
+import rest
+
 DEFAULT_REPOSITORIES = [
     {
         "name": "transplant-src",
@@ -118,9 +120,7 @@ def get_revset_info(repository_id, revset):
         msg = too_many_commits_error(commits_count, MAX_COMMITS)
         raise TooManyCommitsError(msg)
 
-    return {
-        "commits": commits
-    }
+    return rest.RevsetInfo(commits=commits)
 
 
 def optimistic_log(repository, revset):
@@ -159,10 +159,6 @@ def raw_transplant(repository, source, revset, message=None):
 
 
 def transplant(src, dst, items):
-    # configure username / email for mercurial commits
-    Repository.username = current_app.config.get('TRANSPLANT_USERNAME', DEFAULT_USERNAME)
-    Repository.email = current_app.config.get('TRANSPLANT_EMAIL', DEFAULT_EMAIL)
-
     dst_repo = clone(dst)
 
     try:

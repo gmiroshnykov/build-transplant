@@ -11,7 +11,7 @@ setup(name='relengapi-transplant',
     url='https://github.com/laggyluke/build-transplant',
     entry_points={
         "relengapi_blueprints": [
-            'mapper = relengapi.blueprints.transplant:bp',
+            'transplant = relengapi.blueprints.transplant:bp',
         ],
     },
     packages=find_packages(),

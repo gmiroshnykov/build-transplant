@@ -7,6 +7,7 @@ import pipes
 import subprocess
 import xml.etree.ElementTree as ET
 
+import rest
 
 def mkdirp(fullpath):
     if not os.path.exists(fullpath):
@@ -136,7 +137,7 @@ class Repository(object):
             xmlAuthor = logentry.find('author')
             author = xmlAuthor.text
             author_email = xmlAuthor.get('email')
-            result = dict(
+            result = rest.CommitInfo(
                 node=node,
                 date=date,
                 author=author,
