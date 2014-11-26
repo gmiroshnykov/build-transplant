@@ -13,6 +13,10 @@ sudo add-apt-repository -y ppa:chris-lea/redis-server
 sudo apt-get update
 sudo apt-get install -y redis-server
 
+# create / chown transplant workdir
+sudo mkdir -p /var/lib/transplant
+sudo chown $USER:$USER /var/lib/transplant
+
 # install, create and activate virtualenv
 sudo pip install virtualenv
 mkdir -p "$HOME/envs"
@@ -29,8 +33,3 @@ pip install honcho redis
 # install transplant blueprint
 cd /vagrant
 pip install -e .[test]
-
-# if settings.py doesn't exist, symlink it from settings.example.py
-if [ ! -e /vagrant/settings.py ]; then
-  ln -s /vagrant/settings.example.py /vagrant/settings.py
-fi

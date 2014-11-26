@@ -95,7 +95,6 @@ def test_lookup(app, client):
     actual_commit = actual_data['revset']['commits'][0]
     assert 'node' in actual_commit
     assert 'author' in actual_commit
-    assert 'author_email' in actual_commit
     assert 'date' in actual_commit
     assert 'message' in actual_commit
     eq_(actual_commit['node'], commit_info['node'])

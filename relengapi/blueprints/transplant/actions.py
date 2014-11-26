@@ -4,6 +4,7 @@
 
 import logging
 import os
+import re
 
 from flask import current_app
 
@@ -20,12 +21,11 @@ DEFAULT_REPOSITORIES = [
     },
     {
         "name": "transplant-dst",
-        "path": "ssh://hg@bitbucket.org/laggyluke/transplant-dst",
-        "base": "ssh://hg@bitbucket.org/laggyluke/transplant-src"
+        "path": "ssh://hg@bitbucket.org/laggyluke/transplant-dst"
     }
 ]
 
-DEFAULT_WORKDIR = '/tmp/transplant'
+DEFAULT_WORKDIR = '/var/lib/transplant'
 DEFAULT_USERNAME = 'Transplant'
 DEFAULT_EMAIL = 'transplant@example.com'
 
@@ -90,7 +90,7 @@ def get_repo_dir(name):
     return os.path.abspath(os.path.join(workdir, name))
 
 
-def clone(name):
+def clone(name, force_update=False):
     repo_url = get_repo_url(name)
     repo_dir = get_repo_dir(name)
     repo_base_url = get_repo_base_url(name)
@@ -99,8 +99,11 @@ def clone(name):
         logger.info('cloning repository "%s"', name)
         repository = Repository.clone(repo_base_url, repo_dir)
     else:
-        logger.debug('repository "%s" is already cloned', name)
+        logger.info('repository "%s" is already cloned', name)
         repository = Repository(repo_dir)
+        if force_update:
+            logger.info('pulling / updating repository "%s"', name)
+            repository.pull(update=True)
 
     repository.set_config({
         "paths": {
@@ -127,9 +130,12 @@ def optimistic_log(repository, revset):
     try:
         commits = repository.log(rev=revset)
     except UnknownRevisionException:
+        # FIXME: the only supported syntax is "rev1 + rev2 + rev3"
+        rev = re.split('\s*\+\s*', revset)
+
         logger.info('revset "%s" not found in local repository, pulling "%s"',
-                    revset, repository.path)
-        repository.pull(rev=revset, update=True)
+                    rev, repository.path)
+        repository.pull(rev=rev, update=True)
         commits = repository.log(rev=revset)
 
     return commits
@@ -141,7 +147,7 @@ def cleanup(repo):
     repo.purge(abort_on_err=True, all=True)
 
     try:
-        repo.strip('outgoing(base)', no_backup=True)
+        repo.strip('outgoing(default)', no_backup=True)
     except MercurialException, e:
         if 'empty revision set' not in e.stderr:
             raise e
@@ -159,7 +165,7 @@ def raw_transplant(repository, source, revset, message=None):
 
 
 def transplant(src, dst, items):
-    dst_repo = clone(dst)
+    dst_repo = clone(dst, force_update=True)
 
     try:
         for item in items:
@@ -209,7 +215,7 @@ def transplant_revset(src, dst, item):
         _transplant(src, dst, item['revset'], message=message)
     else:
         old_tip = dst_repo.id(id=True)
-        revset = [commit['node'] for commit in commits]
+        revset = [commit.node for commit in commits]
 
         # no need to pass message as we'll override it during collapse anyway
         _transplant(src, dst, revset)
@@ -222,7 +228,8 @@ def transplant_revset(src, dst, item):
             return
 
         logger.info('collapsing "%s"', collapse_rev)
-        dst_repo.collapse(rev=collapse_rev, message=message)
+        last_commit_author = commits[-1].author
+        dst_repo.collapse(rev=collapse_rev, message=message, user=last_commit_author)
 
 
 def _transplant(src, dst, revset, message=None):

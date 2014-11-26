@@ -75,7 +75,7 @@ def transplant(transplant_task):
 
 
     async_result = tasks.transplant.apply_async((src, dst, items), queue='transplant')
-    return rest.TransplantTaskAsyncResult(task=async_result.id)
+    return rest.TransplantTaskAsyncResult(task=async_result.id), 202
 
 @bp.route('/result/<task_id>', methods=['GET'])
 @apimethod(rest.TransplantTaskResult, unicode)
@@ -89,11 +89,13 @@ def result(task_id):
     )
 
     if task.ready():
-        value = task.get()
-        print value
-        if 'error' in value:
-            task_result.error = value['error']
-        else:
-            task_result.tip = value['tip']
+        value = None
+        try:
+            value = task.get()
+        except Exception, e:
+            task_result.error = str(e)
+            return task_result
+
+        task_result.tip = value['tip']
 
     return task_result

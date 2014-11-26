@@ -11,7 +11,6 @@ class CommitInfo(wsme.types.Base):
     node = unicode
     date = unicode
     author = unicode
-    author_email = unicode
     message = unicode
 
 

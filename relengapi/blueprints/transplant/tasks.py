@@ -3,9 +3,9 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from relengapi.lib import celery
+from repository import MercurialException
 import actions
 
-@celery.task()
+@celery.task(throws=(MercurialException,))
 def transplant(src, dst, items):
-    result = actions.transplant(src, dst, items)
-    return result['tip']
+    return actions.transplant(src, dst, items)

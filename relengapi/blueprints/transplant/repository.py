@@ -135,13 +135,19 @@ class Repository(object):
             date = logentry.find('date').text
             message = logentry.find('msg').text
             xmlAuthor = logentry.find('author')
-            author = xmlAuthor.text
+            author_name = xmlAuthor.text
             author_email = xmlAuthor.get('email')
+
+            # I hate Mercurial
+            if author_name == author_email:
+                author = author_name
+            else:
+                author = author_name + ' <' + author_email + '>'
+
             result = rest.CommitInfo(
                 node=node,
                 date=date,
                 author=author,
-                author_email=author_email,
                 message=message
             )
             results.append(result)
@@ -222,7 +228,7 @@ class Repository(object):
 
         return self.local_command(cmd, extensions=['strip'])
 
-    def collapse(self, rev, message=None):
+    def collapse(self, rev, message=None, user=None):
         cmd = ['collapse', '--rev', rev]
 
         env = os.environ.copy()
@@ -230,6 +236,9 @@ class Repository(object):
             env['EDITOR'] = 'true'
         else:
             cmd.extend(['--message', message])
+
+        if user is not None:
+            env['HGUSER'] = user
 
         return self.local_command(cmd, env=env, extensions=['collapse'])
 
@@ -251,6 +260,7 @@ class MercurialException(Exception):
         self.returncode = returncode
         self.stdout = stdout
         self.stderr = stderr
+        Exception.__init__(self, cmd, returncode, stdout, stderr)
 
     def __str__(self):
         command = ' '.join([pipes.quote(arg) for arg in self.cmd])
@@ -264,6 +274,7 @@ class UnknownRevisionException(Exception):
     def __init__(self, rev, cause=None):
         self.rev = rev
         self.cause = cause
+        Exception.__init__(self, rev, cause)
 
     def __str__(self):
         message = "unknown revision: '{}'".format(self.rev)
