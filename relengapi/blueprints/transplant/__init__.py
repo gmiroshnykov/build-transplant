@@ -84,7 +84,7 @@ def result(task_id):
 
     task = current_app.celery.AsyncResult(task_id)
     task_result = rest.TransplantTaskResult(
-        id=task.id,
+        task=task.id,
         state=task.state
     )
 

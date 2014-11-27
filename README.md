@@ -28,8 +28,7 @@ Architecture
 
 * Backend:
   * HTTP (REST) API powered by [Flask](http://flask.pocoo.org/)
-  * Mercurial operations are performed by spawning `hg` subprocesses
-  * TODO: repository-wide locking
+  * Mercurial operations are performed in [Celery](http://www.celeryproject.org/) workers
 
 Transplant tool has a local clone of each preconfigured repository.
 Pulling and pushing is performed via SSH using a dedicated key.
@@ -65,7 +64,7 @@ try with `--rev` option.
   ```
   hg update --clean
   hg purge --abort-on-err --all
-  hg strip --rev('outgoing(base)')
+  hg strip --rev('outgoing(default)')
   ```
 
 5. Return the results in HTTP response
@@ -136,7 +135,7 @@ Each item can be:
   }
   ```
 
-2. A [revset](http://www.selenic.com/hg/help/revsets) that will be squashed, e.g.
+2. A *plus-separated* list of commits that will be squashed, e.g.
 
   ```json
   {
@@ -144,6 +143,8 @@ Each item can be:
     "message": "(optional) squashed commits message"
   }
   ```
+
+  **Please note: future versions may use an actual array instead of a plus-separated list.**
 
 Full example:
 
@@ -168,3 +169,51 @@ Full example:
 ```
 
 The `Content-Type` request header must be set to `application/json`.
+
+In response, you'll receive a task ID, e.g.
+
+```json
+{
+    "result": {
+        "task": "e2167b61-d259-4b74-b3ad-b48743a60269"
+    }
+}
+```
+
+Use this task ID to get the result of transplant by querying `/transplant/result/<task_id>`, e.g.
+
+Request: `GET /transplant/results/e2167b61-d259-4b74-b3ad-b48743a60269`
+
+Resonse:
+```json
+{
+    "result": {
+        "state": "PENDING",
+        "task": "e2167b61-d259-4b74-b3ad-b48743a60269"
+    }
+}
+```
+
+Then, once the task is done, you'll receive a new `tip` of destination repository:
+
+```json
+{
+    "result": {
+        "state": "SUCCESS",
+        "task": "e2167b61-d259-4b74-b3ad-b48743a60269",
+        "tip": "2da726637ebf"
+    }
+}
+```
+
+In case of failure, the result will currently look like this:
+
+```json
+{
+    "result": {
+        "error": "command: hg pull --update --rev not-a-commit\nreturncode: 255\nstdout: pulling from ssh://hg@bitbucket.org/laggyluke/transplant-dst\n\nstderr: abort: unknown revision 'not-a-commit'!\n\n",
+        "state": "FAILURE",
+        "task": "889d480d-fdf5-4526-8821-6d9151f0915a"
+    }
+}
+```

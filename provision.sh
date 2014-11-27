@@ -32,4 +32,5 @@ pip install honcho redis
 
 # install transplant blueprint
 cd /vagrant
+rm -rf ./relengapi_transplant.egg-info
 pip install -e .[test]
