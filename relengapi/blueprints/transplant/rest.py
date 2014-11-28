@@ -58,8 +58,6 @@ class TransplantTaskAsyncResult(wsme.types.Base):
     #: task id
     task = unicode
 
-    #: error
-    error = unicode
 
 class TransplantTaskResult(wsme.types.Base):
     """Transplant task result."""

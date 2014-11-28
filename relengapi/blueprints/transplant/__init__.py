@@ -9,6 +9,7 @@ from flask import Blueprint
 from flask import current_app
 from flask import jsonify
 from flask import request
+from werkzeug.exceptions import BadRequest
 from repository import MercurialException
 from repository import Repository
 from repository import UnknownRevisionException
@@ -29,17 +30,11 @@ def revset_info(repository_id, revset):
     try:
         return actions.get_revset_info(repository_id, revset)
     except actions.TooManyCommitsError, e:
-        return jsonify({
-            'error': e.message
-        }), 400
+        raise BadRequest(e.message)
     except actions.TransplantError, e:
-        return jsonify({
-            'error': e.message
-        }), 400
+        raise BadRequest(e.message)
     except MercurialException, e:
-        return jsonify({
-            'error': e.stderr
-        }), 400
+        raise BadRequest(e.message)
 
 
 @bp.route('/transplant', methods=['POST'])
@@ -63,15 +58,15 @@ def transplant(transplant_task):
 
     if not actions.has_repo(src):
         msg = 'Unknown src repository: {}'.format(src)
-        return rest.TransplantTaskAsyncResult(error=msg), 400
+        raise BadRequest(msg)
 
     if not actions.has_repo(dst):
         msg = 'Unknown dst repository: {}'.format(dst)
-        return rest.TransplantTaskAsyncResult(error=msg), 400
+        raise BadRequest(msg)
 
     if not actions.is_allowed_transplant(src, dst):
         msg = 'Transplant from {} to {} is not allowed'.format(src, dst)
-        return rest.TransplantTaskAsyncResult(error=msg), 400
+        raise BadRequest(msg)
 
 
     async_result = tasks.transplant.apply_async((src, dst, items), queue='transplant')
