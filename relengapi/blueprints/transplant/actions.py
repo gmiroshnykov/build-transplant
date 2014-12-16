@@ -14,20 +14,8 @@ from repository import UnknownRevisionException
 
 import rest
 
-DEFAULT_REPOSITORIES = [
-    {
-        "name": "transplant-src",
-        "path": "ssh://hg@bitbucket.org/laggyluke/transplant-src"
-    },
-    {
-        "name": "transplant-dst",
-        "path": "ssh://hg@bitbucket.org/laggyluke/transplant-dst"
-    }
-]
-
 DEFAULT_WORKDIR = '/var/lib/transplant'
-DEFAULT_USERNAME = 'Transplant'
-DEFAULT_EMAIL = 'transplant@example.com'
+DEFAULT_REPOSITORIES = []
 
 PROJECT_DIR = os.path.dirname(os.path.realpath(__file__))
 TRANSPLANT_FILTER = os.path.join(PROJECT_DIR, 'transplant_filter.py')

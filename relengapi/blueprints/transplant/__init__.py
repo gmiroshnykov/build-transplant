@@ -14,6 +14,7 @@ from repository import MercurialException
 from repository import Repository
 from repository import UnknownRevisionException
 from relengapi import apimethod
+from relengapi import p
 
 import tasks
 import actions
@@ -22,8 +23,11 @@ import rest
 logger = logging.getLogger(__name__)
 bp = Blueprint('transplant', __name__)
 
+p.transplant.transplant.doc('Perform a transplant')
+
 @bp.route('/repositories/<repository_id>/revsets/<revset>', methods=['GET'])
 @apimethod(rest.RevsetInfo, unicode, unicode)
+@p.transplant.transplant.require()
 def revset_info(repository_id, revset):
     """Get commit info by revset."""
 
@@ -39,6 +43,7 @@ def revset_info(repository_id, revset):
 
 @bp.route('/transplant', methods=['POST'])
 @apimethod(rest.TransplantTaskAsyncResult, body=rest.TransplantTask)
+@p.transplant.transplant.require()
 def transplant(transplant_task):
     """Request a transplant job."""
 
@@ -74,6 +79,7 @@ def transplant(transplant_task):
 
 @bp.route('/result/<task_id>', methods=['GET'])
 @apimethod(rest.TransplantTaskResult, unicode)
+@p.transplant.transplant.require()
 def result(task_id):
     """Get transplant job result."""
 
